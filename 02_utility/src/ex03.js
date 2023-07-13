@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import Stats from 'stats.js';
+import dat from 'dat.gui';
 
 // ----- 주제: GUI 컨트롤
 // 해당기능은 threejs에 없는 기능이므로 패키지 설치해야 함 npm i dat.gui
@@ -46,9 +46,20 @@ export default function example() {
 	scene.add(mesh);
 
 
-	// Stats
-	const stats = new Stats();
-	document.body.append(stats.domElement);
+	// Dat GUI
+	const gui = new dat.GUI();
+	gui.add(mesh.position, 'y', -5, 5, 0.01).name('mesh의 y위치');
+	gui.add(camera.position, 'x', -10, 10, 0.01).name('카메라 x')
+	// gui
+	// 	.add(mesh.position, 'z')
+	// 	.min(-10)
+	// 	.max(3)
+	// 	.step(0.01)
+	// 	.name('mesh의 z위치')
+
+	camera.lookAt(mesh.position);
+
+
 
 	// 그리기
 	const clock = new THREE.Clock();
@@ -56,10 +67,10 @@ export default function example() {
 	function draw() {
 		const time = clock.getElapsedTime();
 
-		stats.update();
-
 		mesh.rotation.y = time;	
 
+		camera.lookAt(mesh.position);
+		
 		renderer.render(scene, camera);
 		renderer.setAnimationLoop(draw);
 	}
