@@ -58,7 +58,7 @@ export default function example() {
 		mesh.position.x = (Math.random() - 0.5) * 5;
 		mesh.position.y = (Math.random() - 0.5) * 5;
 		mesh.position.z = (Math.random() - 0.5) * 5;
-        mesh.name = `box-${i}`
+        mesh.name = `box-${i}` // 각 객체에 이름을 줘서 드래그한 객체의 name을 가져올 수 있도록 지정
 		scene.add(mesh)
 
         meshes.push(mesh)
