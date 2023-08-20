@@ -1,9 +1,9 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import dat from 'dat.gui';
-import { DirectionalLightHelper } from 'three';
+import { DirectionalLightHelper, ShapePath } from 'three';
 
-// ----- 주제: light 애니메이션
+// ----- 주제: HemisphereLight
 
 export default function example() {
 	// Renderer
@@ -14,6 +14,10 @@ export default function example() {
 	});
 	renderer.setSize(window.innerWidth, window.innerHeight);
 	renderer.setPixelRatio(window.devicePixelRatio > 1 ? 2 : 1);
+    // 그림자 설정
+    renderer.shadowMap.enabled = true;
+    // renderer.shadowMap.type = THREE.PCFShadowMap; // 기본값
+    renderer.shadowMap.type = THREE.BasicShadowMap;
 
 	// Scene
 	const scene = new THREE.Scene();
@@ -30,16 +34,25 @@ export default function example() {
 	scene.add(camera);
 
 	// Light
-	const ambientLight = new THREE.AmbientLight('white', 0.5);
-	scene.add(ambientLight)
+	// const ambientLight = new THREE.AmbientLight('white', 0.5);
+	// scene.add(ambientLight)
 
-	const light = new THREE.DirectionalLight('red', 0.5);
-	light.position.y = 3;
+	const light = new THREE.HemisphereLight('pink','lime', 1);
+	light.position.x = -5;
+    light.position.y = 3;
 	scene.add(light)
 
-	const lightHelper = new THREE.DirectionalLightHelper(light);
+	const lightHelper = new THREE.HemisphereLightHelper(light);
 	scene.add(lightHelper)
 
+    // 그림자 설정
+    // light.castShadow = true; // 설정해주면 그림자를 만들 수 있는 라이트가 됨
+    // 그림자 퀄리티 올리기
+    // light.shadow.mapSize.width = 2048; // 기본값 512
+    // light.shadow.mapSize.height = 2048; // 기본값 512
+    // light.shadow.camera.near = 1;
+    // light.shadow.camera.far = 30;
+    
 	// Controls
 	const controls = new OrbitControls(camera, renderer.domElement);
 
@@ -53,10 +66,10 @@ export default function example() {
 		color: 'white'
 	});
 	const material2 = new THREE.MeshStandardMaterial({
-		color: 'royalblue'
+		color: 'white'
 	});
 	const material3 = new THREE.MeshStandardMaterial({
-		color: 'gold'
+		color: 'white'
 	});
 
 	// Mesh
@@ -67,6 +80,13 @@ export default function example() {
 	plane.rotation.x = -Math.PI * 0.5;
 	box.position.set(1, 1, 0);
 	sphere.position.set(-1, 1, 0)
+
+    // 그림자 설정
+    plane.receiveShadow = true;
+    box.castShadow = true;
+    box.receiveShadow = true;
+    sphere.castShadow = true;
+    sphere.receiveShadow = true;
 
 	scene.add(plane, box, sphere);
 
@@ -87,8 +107,8 @@ export default function example() {
 		// const delta = clock.getDelta();
 		const time = clock.getElapsedTime(); // 계속 늘어나는 값
 
-		light.position.x = Math.cos(time);
-		light.position.z = Math.sin(time);
+		// light.position.x = Math.cos(time);
+		// light.position.z = Math.sin(time);
 
 		renderer.render(scene, camera);
 		renderer.setAnimationLoop(draw);
